@@ -20,8 +20,17 @@ from django.contrib import admin
 from django.urls import include, path
 
 
+admin.site.site_header = "TeamFlow Administration"
+admin.site.site_title = "TeamFlow Admin"
+admin.site.index_title = "TeamFlow project management"
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("accounts/", include("accounts.urls")),
     path("", include("projects.urls")),
+    path("tasks/", include("tasks.urls")),
 ]
+
+
+
 

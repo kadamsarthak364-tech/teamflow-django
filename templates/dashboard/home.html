@@ -36,11 +36,13 @@
                     <i class="bi bi-grid-1x2-fill" aria-hidden="true"></i>
                     <span>Overview</span>
                 </a>
-                <a class="nav-item" href="/admin/">
+                {% if user.is_authenticated and user.is_staff %}
+                <a class="nav-item" href="{% url 'admin_tools' %}">
                     <i class="bi bi-sliders2" aria-hidden="true"></i>
                     <span>Admin tools</span>
                     <i class="bi bi-arrow-up-right nav-external" aria-hidden="true"></i>
                 </a>
+                {% endif %}
             </nav>
 
             <div class="sidebar-footer">
@@ -52,10 +54,22 @@
         <main class="main-content">
             <header class="topbar">
                 <div class="breadcrumb-label">Workspace <span>/</span> Overview</div>
-                <a class="topbar-link" href="/admin/">
-                    <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
-                    <span>Open admin</span>
-                </a>
+                <div class="d-flex align-items-center gap-3">
+                    {% if user.is_authenticated and user.is_staff %}
+                    <a class="topbar-link" href="{% url 'admin:index' %}">
+                        <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                        <span>Open admin</span>
+                    </a>
+                    {% endif %}
+                    <span>{{ request.user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-secondary btn-sm" type="submit">
+                            <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                            Log out
+                        </button>
+                    </form>
+                </div>
             </header>
 
             <div class="page-content">
@@ -129,6 +143,14 @@
                                     <h3>{{ project.title }}</h3>
                                     <span>Project</span>
                                 </div>
+                                <a href="{% url 'project_detail' project.id %}"
+                                   class="btn btn-outline-primary btn-sm">
+                                    View
+                                </a>
+                                <a href="{% url 'edit_project' project.id %}"
+                                   class="btn btn-warning btn-sm">
+                                    Edit Project
+                                </a>
                                 <form method="POST" action="{% url 'delete_project' project.id %}"
                                       onsubmit="return confirm('Delete this project?');">
                                     {% csrf_token %}
